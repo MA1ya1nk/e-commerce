@@ -58,7 +58,7 @@ const BlogCard = () => {
     >
       {/* Blog Image Placeholder */}
       <img 
-        src="/blog-placeholder.png" 
+        src="/blog/first.jpg" 
         alt="Blog Post" 
         className="w-full h-[250px] object-cover rounded-[5px]"
       />
@@ -76,8 +76,8 @@ const BlogCard = () => {
       </div>
 
       {/* Author Info Placeholder */}
-      <div className="flex items-center gap-[12px] mt-auto">
-        <img src="/author-placeholder.png" alt="Author" className="w-[40px] h-[40px] rounded-full" />
+      <div className="flex items-center gap-[12px] mt-0">
+        <img src="/blog/first-avatar.png" alt="Author" className="w-[40px] h-[40px] rounded-full" />
         <div className="flex flex-col">
           <span className="text-[14px] font-semibold">John Smith</span>
           <span className="text-[12px] text-gray-400">11 Jan 2022 . 5 min read</span>

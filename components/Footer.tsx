@@ -10,7 +10,7 @@ const Footer = () => {
       style={{ 
         width: '1280px', 
         height: '299px', 
-        marginTop: '1713px', // Positioned 1713px from top
+         // Positioned 1713px from top
         opacity: '1' 
       }}
     >

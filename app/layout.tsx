@@ -5,17 +5,27 @@ import Footer from "@/components/Footer";
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="flex flex-col items-center min-h-screen bg-white">
-        {/* Navbar sits at the very top */}
-        <Navbar /> 
-        
-        {/* main flex-grow fills the space between nav and footer */}
-        <main className="flex-grow w-full max-w-[1280px] flex flex-col items-center">
-          {children}
+      <body className="flex flex-col min-h-screen bg-white">
+        {/* Navbar Container */}
+        <header className="w-full flex justify-center border-b">
+          <div className="w-full max-w-[1280px]">
+            <Navbar />
+          </div>
+        </header>
+
+        {/* Main Content Container */}
+        <main className="flex-grow w-full flex justify-center">
+          <div className="w-full max-w-[1280px]">
+            {children}
+          </div>
         </main>
 
-        {/* Footer sits at the bottom of the content */}
-        <Footer />
+        {/* Footer Container */}
+        <footer className="w-full flex justify-center bg-[#F9FAFB] border-t">
+          <div className="w-full max-w-[1280px]">
+            <Footer />
+          </div>
+        </footer>
       </body>
     </html>
   );

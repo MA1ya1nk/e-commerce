@@ -1,11 +1,12 @@
 import React from 'react';
 import { Inter } from 'next/font/google';
+import Link from 'next/dist/client/link';
 
 const inter = Inter({ subsets: ['latin'] });
 
 const Navbar = () => {
   return (
-    <nav className={`${inter.className} relative flex items-center bg-white`} 
+    <nav className="w-[1229px] h-[40px] mt-[17px] mb-[20px] mx-auto flex items-center justify-between" 
          style={{ 
            width: '1229px', 
            height: '40px', 
@@ -32,11 +33,13 @@ const Navbar = () => {
       </div>
 
       {/* Right Section: CTA Button */}
+      <Link href="/signup">
       <div className="ml-auto">
         <button className="bg-[#284297] text-white px-[24px] py-[10px] rounded-full text-[14px] font-semibold transition-all hover:bg-[#1e3276]">
           Sign In
         </button>
       </div>
+      </Link>
     </nav>
   );
 };
