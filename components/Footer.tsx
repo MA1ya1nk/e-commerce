@@ -9,7 +9,7 @@ const Footer = () => {
       className={`${inter.className} bg-[#F9FAFB] text-[#374151] relative`}
       style={{ 
         width: '1280px', 
-        height: '299px', 
+        height: '340px', 
          // Positioned 1713px from top
         opacity: '1' 
       }}
@@ -20,7 +20,7 @@ const Footer = () => {
         <div className="w-[320px]">
           <div className="flex items-center gap-[12px] mb-[16px]">
             {/* Logo Placeholder */}
-            <img src="/logo-placeholder.png" alt="ShopRise Logo" width="32" height="32" />
+            <img src="/footer/temp.png" alt="ShopRise Logo" width="32" height="32" />
             <span className="text-[18px] font-semibold text-[#111827]">ShopRise</span>
           </div>
           
@@ -37,10 +37,10 @@ const Footer = () => {
 
         {/* Column 2: Navigation */}
         <div className="flex flex-col gap-[16px] text-[14px]">
-          <a href="#" className="text-[#FF8A65] font-medium">All listing</a>
-          <a href="#" className="hover:text-black">About us</a>
-          <a href="#" className="hover:text-black">FAQ</a>
-          <a href="#" className="hover:text-black">Blog</a>
+          <a href="/" className="text-[#FF8A65] font-medium">All listing</a>
+          <a href="/about" className="hover:text-black">About us</a>
+          <a href="/faq" className="hover:text-black">FAQ</a>
+          <a href="/blog" className="hover:text-black">Blog</a>
         </div>
 
         {/* Column 3: Legal */}
@@ -65,11 +65,11 @@ const Footer = () => {
             </button>
           </div>
 
-          <div className="flex justify-end gap-[16px]">
+          <div className="flex flex-col justify-end gap-[16px]">
             {/* Facebook Icon Placeholder */}
-            <img src="/facebook-icon.png" alt="Facebook" width="24" height="24" className="cursor-pointer" />
+            <img src="/footer/facebook.png" alt="Facebook" width="24" height="24" className="cursor-pointer" />
             {/* Instagram Icon Placeholder */}
-            <img src="/instagram-icon.png" alt="Instagram" width="24" height="24" className="cursor-pointer" />
+            <img src="/footer/instagram.png" alt="Instagram" width="24" height="24" className="cursor-pointer" />
           </div>
         </div>
       </div>

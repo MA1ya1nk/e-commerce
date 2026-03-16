@@ -26,7 +26,7 @@ const Navbar = () => {
       {/* Middle Section: Navigation Links */}
       {/* Gap is set to 321px as per your spec */}
       <div className="flex items-center ml-[321px] gap-[32px]">
-        <a href="#" className="text-[16px] font-medium text-[#FF8A65]">All listing</a>
+        <a href="/" className="text-[16px] font-medium text-[#FF8A65]">All listing</a>
         <a href="/about" className="text-[16px] font-medium text-[#374151] hover:text-black">About us</a>
         <a href="/faqs" className="text-[16px] font-medium text-[#374151] hover:text-black">FAQ</a>
         <a href="/blog" className="text-[16px] font-medium text-[#374151] hover:text-black">Blog</a>
