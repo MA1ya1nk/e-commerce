@@ -46,7 +46,6 @@ const orders = [
   { id: '173204', date: '18 March', customer: 'Jackson Smith', product: 'Litter troller sprayer', address: 'Adress', fulfilment: 'Delivered', total: 'Total', status: 'Delivered' },
 ];
 
-/* ─── Badge maps ─── */
 const fulfilmentBadge = {
   Delivered: 'bg-green-100 text-green-600',
   Packing:   'bg-orange-100 text-orange-500',
@@ -91,7 +90,7 @@ const DashboardPage = () => {
         </div>
       </aside>
 
-      {/* ── MAIN ── */}
+      {/* ── MAIN ── fills ALL remaining space after sidebar ── */}
       <main className="flex-1 flex flex-col min-w-0">
 
         {/* Top bar */}
@@ -102,7 +101,8 @@ const DashboardPage = () => {
           </NextLink>
         </header>
 
-        <div className="px-8 pt-6 pb-10 flex flex-col gap-6 max-w-[1023px]">
+        {/* Content — w-full, no max-w cap so it fills remaining space */}
+        <div className="w-full px-8 pt-6 pb-10 flex flex-col gap-6">
 
           {/* Welcome */}
           <h1 className="text-[24px] font-bold text-[#111827]">Welcome back John!</h1>
@@ -112,16 +112,16 @@ const DashboardPage = () => {
             <h2 style={{ fontFamily: 'Inter', fontWeight: 500, fontSize: '18px', color: '#284297' }}>
               Marketplace insights
             </h2>
-            {/* Cards row — matches screenshot: circular gray icon bg, number large on left, label small below */}
-            <div className="flex justify-between gap-4">
+            {/* Use grid so cards stretch evenly across full width */}
+            <div className="grid grid-cols-4 gap-4">
               {insightCards.map(({ label, icon: Icon }) => (
-                <div key={label} className="bg-white flex items-center gap-4 px-4"
-                  style={{ width: '230px', height: '70px', borderRadius: '10px', border: '1px solid #F3F4F6' }}>
-                  {/* Circle icon — gray background matching screenshot */}
+                <div key={label}
+                  className="bg-white flex items-center gap-4 px-4 rounded-[10px] border border-gray-100"
+                  style={{ height: '70px' }}
+                >
                   <div className="w-11 h-11 rounded-full bg-gray-200 flex items-center justify-center shrink-0">
                     <Icon size={20} style={{ color: '#284297' }} />
                   </div>
-                  {/* Number + label stacked */}
                   <div className="flex flex-col">
                     <span style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: '22px', color: '#111827', lineHeight: '1' }}>0</span>
                     <span style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '11px', color: '#6B7280', lineHeight: '1.3', marginTop: '2px' }}>{label}</span>
@@ -131,16 +131,17 @@ const DashboardPage = () => {
             </div>
           </div>
 
-          {/* ── Second "Marketplace insights" section (analytics) ── */}
+          {/* ── Analytics Cards ── */}
           <div className="flex flex-col gap-3">
             <h2 style={{ fontFamily: 'Inter', fontWeight: 500, fontSize: '18px', color: '#284297' }}>
               Marketplace insights
             </h2>
-            {/* Plain white cards, no border/shadow, just bg-white */}
-            <div className="flex justify-between gap-4">
+            <div className="grid grid-cols-4 gap-4">
               {analyticsCards.map((item, idx) => (
-                <div key={idx} className="bg-white flex flex-col justify-center px-4"
-                  style={{ width: '230px', height: '89px' }}>
+                <div key={idx}
+                  className="bg-white flex flex-col justify-center px-4 rounded-[10px] border border-gray-100"
+                  style={{ height: '89px' }}
+                >
                   <div style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: '22px', color: '#111827', lineHeight: '1' }}>0%</div>
                   <div style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '14px', color: '#374151', marginTop: '4px', lineHeight: '1.2' }}>
                     {item.label}
@@ -157,7 +158,7 @@ const DashboardPage = () => {
           <div className="flex flex-col gap-3">
             <h2 style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: '16px', color: '#284297' }}>Orders</h2>
 
-            <div className="bg-white rounded-[10px] border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded-[10px] border border-gray-100 overflow-hidden w-full">
               <table className="w-full text-left border-collapse">
                 <thead style={{ backgroundColor: '#D3D3D380' }}>
                   <tr style={{ fontFamily: 'Inter', fontWeight: 600, fontSize: '12px', color: '#4B5563' }}>
@@ -181,18 +182,20 @@ const DashboardPage = () => {
                       </td>
                       <td className="px-4 py-3 text-gray-500 whitespace-nowrap">{order.product}</td>
                       <td className="px-4 py-3 text-gray-500">{order.address}</td>
-                      {/* Fulfilment — colored badge */}
                       <td className="px-4 py-3">
-                        <span className={`inline-flex px-2.5 py-1 rounded-full text-[11px] font-semibold ${fulfilmentBadge[order.fulfilment] ?? 'bg-gray-100 text-gray-500'}`}>
-                          {order.fulfilment}
-                        </span>
+                        <span className={`inline-flex px-2.5 py-1 rounded-full text-[11px] font-semibold ${
+    fulfilmentBadge[order.fulfilment as keyof typeof fulfilmentBadge] ?? 'bg-gray-100 text-gray-500'
+  }`}>
+    {order.fulfilment}
+  </span>
                       </td>
                       <td className="px-4 py-3 text-gray-700">{order.total}</td>
-                      {/* Status — colored badge */}
                       <td className="px-4 py-3">
-                        <span className={`inline-flex px-2.5 py-1 rounded-full text-[11px] font-semibold ${statusBadge[order.status] ?? 'bg-gray-100 text-gray-500'}`}>
-                          {order.status}
-                        </span>
+                        <span className={`inline-flex px-2.5 py-1 rounded-full text-[11px] font-semibold ${
+    statusBadge[order.status as keyof typeof statusBadge] ?? 'bg-gray-100 text-gray-500'
+  }`}>
+    {order.status}
+  </span>
                       </td>
                     </tr>
                   ))}
