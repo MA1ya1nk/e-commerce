@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 /* ─────────────────────────────────────────
-   DATA
+    DATA
 ───────────────────────────────────────── */
 const navLinks = ['For you', 'Local', 'Selling', 'Buying', 'More'];
 
@@ -42,7 +42,7 @@ const products = Array(42).fill(null).map((_, i) => ({
 const ITEMS_PER_PAGE = 36;
 
 /* ─────────────────────────────────────────
-   PRODUCT CARD
+    PRODUCT CARD
 ───────────────────────────────────────── */
 function ProductCard({ product }) {
   return (
@@ -78,13 +78,13 @@ function ProductCard({ product }) {
   );
 }
 /* ─────────────────────────────────────────
-   MAIN PAGE
+    MAIN PAGE
 ───────────────────────────────────────── */
 export default function MarketplacePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('Less viewed');
   const [showSortDropdown, setShowSortDropdown] = useState(false);
-  const [showCategories, setShowCategories] = useState(false); // NEW
+  const [showCategories, setShowCategories] = useState(false); 
   const [activeFilters, setActiveFilters] = useState([...filterCategories]);
   const [page, setPage] = useState(1);
   const [activeNav, setActiveNav] = useState('For you');
@@ -99,8 +99,11 @@ export default function MarketplacePage() {
   const filtered = products.filter(p =>
     searchQuery === '' || p.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
-  const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+  // Logic to show products only on page 1, and nothing on next pages
+  const paginated = page === 1 
+    ? filtered.slice(0, ITEMS_PER_PAGE) 
+    : [];
 
   return (
     <div
@@ -115,7 +118,6 @@ export default function MarketplacePage() {
         className="sticky top-0 z-50 bg-white border-b border-gray-200 flex items-center"
         style={{ height: '57px', width: '100%', paddingLeft: '16px', paddingRight: '16px', gap: '9px' }}
       >
-        {/* DROPDOWN SECTION */}
         <div className="relative" onClick={e => e.stopPropagation()}>
           <button 
             onClick={() => setShowCategories(!showCategories)}
@@ -127,25 +129,21 @@ export default function MarketplacePage() {
           </button>
 
           {showCategories && (
-  <div 
-    className="absolute top-full left-0 mt-1 bg-white border border-gray-200 shadow-xl z-50" 
-    style={{ 
-      width: '240px', 
-      borderRadius: '4px',
-      padding: '4px 0' // Adds a little breathing room top and bottom
-    }}
-  >
-    {allCategories.map(cat => (
-      <button
-        key={cat}
-        onClick={() => addFilter(cat)}
-        className="w-full text-left px-4 py-2 text-[13px] text-gray-700 hover:bg-gray-50 transition-colors"
-      >
-        {cat}
-      </button>
-    ))}
-  </div>
-)}
+            <div 
+              className="absolute top-full left-0 mt-1 bg-white border border-gray-200 shadow-xl z-50" 
+              style={{ width: '240px', borderRadius: '4px', padding: '4px 0' }}
+            >
+              {allCategories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => addFilter(cat)}
+                  className="w-full text-left px-4 py-2 text-[13px] text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <nav className="flex items-center gap-1">
@@ -180,7 +178,6 @@ export default function MarketplacePage() {
         </div>
       </header>
 
-      {/* SORT BY ROW */}
       <div className="flex items-center px-4 border-b border-gray-100 bg-white" style={{ height: '44px', gap: '10px' }}>
         <span className="text-[13px] text-gray-500 shrink-0">Sort by:</span>
         <div className="relative" onClick={e => e.stopPropagation()}>
@@ -204,7 +201,6 @@ export default function MarketplacePage() {
         </div>
       </div>
 
-      {/* FILTER CHIPS ROW */}
       <div className="flex items-center px-4 border-b border-gray-100 bg-white overflow-x-auto" style={{ height: '44px', gap: '8px' }}>
         {activeFilters.map(cat => (
           <div key={cat} className="flex items-center gap-1.5 px-3 py-1 border border-gray-300 rounded-full text-[12px] text-gray-700 whitespace-nowrap hover:border-gray-400 shrink-0 cursor-pointer">
@@ -219,12 +215,39 @@ export default function MarketplacePage() {
         )}
       </div>
 
-      {/* GRID */}
       <div className="px-4 pt-4 pb-6">
         <div className="grid" style={{ gridTemplateColumns: 'repeat(6, 1fr)', gap: '12px' }}>
           {paginated.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
+        </div>
+
+        {/* ── PAGINATION ADDED HERE ── */}
+        <div className="flex items-center justify-center gap-2 mt-12 pb-10">
+          <button 
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          
+          {[1, 2, 3, '...', 9].map((item, idx) => (
+            <button
+              key={idx}
+              onClick={() => typeof item === 'number' && setPage(item)}
+              className={`w-8 h-8 flex items-center justify-center rounded text-[13px] font-medium transition-colors
+                ${page === item ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-50'}`}
+            >
+              {item}
+            </button>
+          ))}
+
+          <button 
+             onClick={() => setPage(p => p + 1)}
+             className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <ChevronRight size={20} />
+          </button>
         </div>
       </div>
     </div>
