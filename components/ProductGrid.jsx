@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   Menu, Search, MapPin, ChevronDown, ChevronLeft, ChevronRight, X
 } from 'lucide-react';
@@ -39,16 +40,18 @@ function ProductCard({ product }) {
   return (
     <div className="cursor-pointer group">
       {/* Image */}
-      <div
-        className="w-full overflow-hidden bg-gray-100 mb-2"
-        style={{ aspectRatio: '1 / 1', borderRadius: '4px' }}
-      >
-        <img
-          src="/purchase(1).png"
-          alt={product.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-        />
-      </div>
+      <Link href={`/products/${product.id}`}>
+        <div
+          className="w-full overflow-hidden bg-gray-100 mb-2"
+          style={{ aspectRatio: '1 / 1', borderRadius: '4px' }}
+        >
+          <img
+            src="/purchase(1).png"
+            alt={product.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+          />
+        </div>
+      </Link>
 
       {/* Info */}
       <p
