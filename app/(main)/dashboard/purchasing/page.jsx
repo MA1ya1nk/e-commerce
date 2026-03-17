@@ -27,13 +27,6 @@ const orders = [
   { date: '18 March', name: 'Litter troller sprayer', seller: 'Jackson Smith', fulfilment: 'Refund',    total: '$300', offer: '$300', status: 'Refund'    },
 ];
 
-const followedSellers = Array(18).fill({
-  name: 'Jennifer Garnet',
-  joined: 'Join oct 2023',
-  listings: '9 listings',
-  rating: 5,
-});
-
 const statusBadge = {
   Completed: 'bg-green-50 text-green-700',
   Pending:   'bg-yellow-50 text-yellow-700',
@@ -43,6 +36,7 @@ const statusBadge = {
 
 export default function PurchasingPage() {
   const [activeTab, setActiveTab] = useState('Purchasing');
+  const [filter, setFilter] = useState('All');
   const tabs = ['Purchasing', 'Offers', 'Following'];
 
   return (
@@ -74,9 +68,7 @@ export default function PurchasingPage() {
         </div>
       </aside>
 
-      {/* ── MAIN: flex-1 fills all remaining width ── */}
       <main className="flex-1 flex flex-col min-w-0">
-
         <header className="h-[56px] flex justify-end items-center px-8 gap-6 bg-white border-b border-gray-100">
           <Bell size={18} className="text-gray-400 cursor-pointer" />
           <NextLink href="/marketplace" className="flex items-center gap-1 text-gray-500 text-[13px] hover:text-gray-800 transition-colors">
@@ -84,148 +76,105 @@ export default function PurchasingPage() {
           </NextLink>
         </header>
 
-        {/* ── w-full, no max-w ── */}
         <div className="w-full px-8 pt-6 pb-10 flex flex-col gap-5">
-
-          <h1 className="text-[24px] font-bold text-[#111827]">Welcome back John!</h1>
-
-          {/* Tabs */}
-          <div className="flex items-end gap-8 border-b border-gray-200">
-            {tabs.map((tab) => (
-              <button key={tab} onClick={() => setActiveTab(tab)}
-                className={`pb-3 text-[15px] font-medium relative whitespace-nowrap transition-colors
-                  ${activeTab === tab ? 'text-[#FF8A65]' : 'text-gray-400 hover:text-gray-600'}`}>
-                {tab}
-                {activeTab === tab && (
-                  <span className="absolute bottom-0 left-0 w-full h-[2.5px] bg-[#FF8A65] rounded-full" />
-                )}
-              </button>
-            ))}
-          </div>
-
-          {/* Search + Date */}
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center border border-gray-200 rounded-[8px] px-3 h-[38px] gap-2 bg-white" style={{ width: '360px' }}>
-              <Search size={14} className="text-gray-400 shrink-0" />
-              <input className="outline-none text-[13px] w-full text-gray-600 bg-transparent placeholder-gray-300" placeholder="Search..." />
+          
+          {/* Header Row: Tabs + Search Bar */}
+          <div className="flex items-end justify-between border-b border-gray-200">
+            <div className="flex gap-8">
+              {tabs.map((tab) => (
+                <button key={tab} onClick={() => setActiveTab(tab)}
+                  className={`pb-3 text-[15px] font-medium relative whitespace-nowrap transition-colors
+                    ${activeTab === tab ? 'text-[#FF8A65]' : 'text-gray-400 hover:text-gray-600'}`}>
+                  {tab}
+                  {activeTab === tab && (
+                    <span className="absolute bottom-0 left-0 w-full h-[2.5px] bg-[#FF8A65] rounded-full" />
+                  )}
+                </button>
+              ))}
             </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 border border-gray-200 bg-white rounded-[8px] px-3 h-[38px] text-[12px] text-gray-500 cursor-pointer hover:border-gray-300 transition-colors">
-                <span>01.11.2023</span>
-                <span className="text-gray-300 mx-1">–</span>
-                <span>30.11.2023</span>
-                <Calendar size={14} className="text-gray-400 ml-1" />
-              </div>
-              <button className="h-[38px] px-6 bg-[#FF8A65] text-white text-[13px] font-medium rounded-[8px] hover:bg-[#f07849] transition-colors whitespace-nowrap">
+
+            {/* NEW SEARCH PLACEMENT */}
+            <div className="relative mb-2">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <input type="text"
+                className="w-[320px] h-[38px] pl-10 pr-20 bg-white border border-gray-200 rounded-full text-sm outline-none focus:border-[#FF8A65]"
+                placeholder="Search" />
+              <button className="absolute right-1 top-1 h-[30px] px-5 bg-[#FF8A65] text-white rounded-full text-[12px] font-medium">
                 Search
               </button>
             </div>
           </div>
 
-          {/* ── Following Grid: auto fills width ── */}
-          {activeTab === 'Following' ? (
-            <div className="grid grid-cols-3 gap-3 overflow-y-auto" style={{ maxHeight: '708px', alignContent: 'start' }}>
-              {followedSellers.map((seller, idx) => (
-                <div key={idx}
-                  className="border border-gray-200 flex items-center bg-white"
-                  style={{ height: '103px', borderRadius: '10px', padding: '10px', gap: '10px' }}>
-                  <div className="w-[60px] h-[60px] rounded-full overflow-hidden flex-shrink-0 bg-gray-100">
-                    <img src="/purchase(2).png" alt="seller" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex flex-col flex-1 h-full justify-between py-0.5">
-                    <div className="flex justify-between items-start">
-                      <span style={{ fontFamily: 'Inter', fontSize: '14px', fontWeight: 500, color: '#111827' }}
-                        className="truncate max-w-[104px]">{seller.name}</span>
-                      <button className="bg-[#1F3A93] text-white text-[10px] px-3 py-1 rounded-full font-medium whitespace-nowrap">
-                        Unfollow
-                      </button>
-                    </div>
-                    <span style={{ fontFamily: 'Inter', fontSize: '12px', color: '#6B7280' }}>{seller.joined}</span>
-                    <div className="flex items-center justify-between">
-                      <div className="flex gap-0.5 items-center">
-                        {[...Array(5)].map((_, i) => <span key={i} className="text-[#FF8A65] text-[12px]">★</span>)}
-                        <span className="text-gray-400 text-[10px] ml-1">(110)</span>
-                      </div>
-                      <button className="text-[#1F3A93] text-[11px] font-medium underline">View listing</button>
-                    </div>
-                    <span className="text-[11px] text-gray-400 leading-none">{seller.listings}</span>
-                  </div>
-                </div>
+          {/* Filter pills + date Row */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {['All', 'Completed', 'Pending', 'Cancel'].map(f => (
+                <button key={f} onClick={() => setFilter(f)}
+                  className={`px-4 py-1.5 rounded-[6px] text-[13px] font-medium transition-colors ${filter === f ? 'bg-green-100 text-green-700' : 'bg-white border border-gray-200 text-gray-500 hover:border-gray-300'}`}>
+                  {f}
+                </button>
               ))}
             </div>
-
-          ) : (
-            /* ── Table: w-full, no max-w ── */
-            <div className="w-full bg-white border border-gray-100 rounded-[12px] overflow-hidden">
-              <table className="w-full text-left border-collapse text-[13px]">
-                <thead className="bg-[#FAFAFA] border-b border-gray-100">
-                  <tr className="text-[11px] text-gray-400 font-semibold uppercase tracking-wider">
-                    <th className="px-4 py-3 w-24">Date</th>
-                    <th className="px-4 py-3 w-16 text-center">Image</th>
-                    <th className="px-4 py-3">Name</th>
-                    <th className="px-4 py-3">Seller</th>
-                    <th className="px-4 py-3">Contact</th>
-                    {activeTab === 'Offers' ? (
-                      <>
-                        <th className="px-4 py-3 w-24">Offer</th>
-                        <th className="px-4 py-3 w-24">Price</th>
-                      </>
-                    ) : (
-                      <th className="px-4 py-3">Fulfilment</th>
-                    )}
-                    {activeTab !== 'Offers' && <th className="px-4 py-3">Total</th>}
-                    <th className="px-4 py-3 w-28">Status</th>
-                    <th className="px-4 py-3 w-16">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white">
-                  {orders.map((order, i) => (
-                    <tr key={i} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
-                      <td className="px-4 py-3 whitespace-nowrap text-gray-600">{order.date}</td>
-                      <td className="px-4 py-3">
-                        <div className="w-10 h-10 rounded-[6px] overflow-hidden bg-gray-100 border border-gray-100 mx-auto">
-                          <img src="/purchase(1).png" alt="product" className="w-full h-full object-cover" />
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-gray-700">{order.name}</td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2 whitespace-nowrap">
-                          <div className="w-6 h-6 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
-                            <img src="/purchase(2).png" alt="user" className="w-full h-full object-cover" />
-                          </div>
-                          <span className="text-gray-700">{order.seller}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <button className="text-[#1F3A93] font-medium underline underline-offset-2 whitespace-nowrap hover:text-[#162d7a] transition-colors">
-                          Go to chat
-                        </button>
-                      </td>
-                      {activeTab === 'Offers' ? (
-                        <>
-                          <td className="px-4 py-3 font-semibold text-gray-800">{order.offer}</td>
-                          <td className="px-4 py-3 font-semibold text-gray-800">{order.total}</td>
-                        </>
-                      ) : (
-                        <>
-                          <td className="px-4 py-3 whitespace-nowrap text-gray-500">{order.fulfilment}</td>
-                          <td className="px-4 py-3 whitespace-nowrap font-bold text-gray-800">{order.total}</td>
-                        </>
-                      )}
-                     <td className="px-4 py-3 whitespace-nowrap">
-  <span className={`px-3 py-1 rounded-full text-[11px] font-semibold ${
-    statusBadge[order.status] ?? 'bg-gray-100 text-gray-500'
-  }`}>
-    {order.status}
-  </span>
-</td>
-                      <td className="px-4 py-3 font-bold text-gray-300 text-lg text-center cursor-pointer">···</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            
+            {/* DATE PICKER */}
+            <div className="flex items-center gap-2 border border-gray-200 bg-white rounded-[8px] px-3 h-[36px] text-[12px] text-gray-500 cursor-pointer hover:border-gray-300 transition-colors">
+              <span>01.11.2023</span><span className="text-gray-300 mx-1">–</span><span>30.11.2023</span>
+              <Calendar size={14} className="text-gray-400 ml-2" />
             </div>
-          )}
+          </div>
+
+          {/* Table Container */}
+          <div className="w-full bg-white border border-gray-100 rounded-[12px] overflow-hidden">
+            <table className="w-full text-left border-collapse text-[13px]">
+              <thead className="bg-[#FAFAFA] border-b border-gray-100">
+                <tr className="text-[11px] text-gray-400 font-semibold uppercase tracking-wider">
+                  <th className="px-4 py-3 w-24">Date</th>
+                  <th className="px-4 py-3 w-16 text-center">Image</th>
+                  <th className="px-4 py-3">Name</th>
+                  <th className="px-4 py-3">Seller</th>
+                  <th className="px-4 py-3">Contact</th>
+                  <th className="px-4 py-3">Fulfilment</th>
+                  <th className="px-4 py-3">Total</th>
+                  <th className="px-4 py-3 w-28">Status</th>
+                  <th className="px-4 py-3 w-16">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white">
+                {orders.map((order, i) => (
+                  <tr key={i} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 whitespace-nowrap text-gray-600">{order.date}</td>
+                    <td className="px-4 py-3">
+                      <div className="w-10 h-10 rounded-[6px] overflow-hidden bg-gray-100 border border-gray-100 mx-auto">
+                        <img src="/purchase(1).png" alt="product" className="w-full h-full object-cover" />
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-gray-700">{order.name}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2 whitespace-nowrap">
+                        <div className="w-6 h-6 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                          <img src="/purchase(2).png" alt="user" className="w-full h-full object-cover" />
+                        </div>
+                        <span className="text-gray-700">{order.seller}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <button className="text-[#1F3A93] font-medium underline underline-offset-2 whitespace-nowrap">
+                        Go to chat
+                      </button>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-gray-500">{order.fulfilment}</td>
+                    <td className="px-4 py-3 whitespace-nowrap font-bold text-gray-800">{order.total}</td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className={`px-3 py-1 rounded-full text-[11px] font-semibold ${statusBadge[order.status] ?? 'bg-gray-100 text-gray-500'}`}>
+                        {order.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 font-bold text-gray-300 text-lg text-center cursor-pointer">···</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
         </div>
       </main>

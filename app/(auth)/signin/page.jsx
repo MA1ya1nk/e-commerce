@@ -1,6 +1,13 @@
+"use client";
 import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/AuthContext';
 
 export default function SignInPage() {
+  const { login } = useAuth();
+const router = useRouter();
+
   return (
     <div className="flex w-[1280px] h-[832px] overflow-hidden bg-white">
       
@@ -14,13 +21,17 @@ export default function SignInPage() {
 
         {/* Main Content (330px wide) */}
         <div className="mt-[156px] w-[330px] flex flex-col items-center gap-[25px]">
-          <div className="flex flex-col items-center gap-2">
-            <img src="/mdi_user.png" alt="User" width="24" height="24" />
-            <h1 className="text-[24px] font-semibold text-[#111827]">Welcome back</h1>
-            <p className="text-[14px] font-normal text-gray-500">
-              Don't have account? <span className="text-[#FF8A65] cursor-pointer">Sign up here</span>
-            </p>
-          </div>
+          
+  <div className="flex flex-col items-center gap-2">
+    <img src="/mdi_user.png" alt="User" width="24" height="24" />
+    <h1 className="text-[24px] font-semibold text-[#111827]">Welcome back</h1>
+    <p className="text-[14px] font-normal text-gray-500">
+      Don't have account?{" "}
+      <Link href="/signup">
+        <span className="text-[#FF8A65] cursor-pointer">Sign up here</span>
+      </Link>
+    </p>
+  </div>
 
           {/* Google Sign In */}
           <button className="w-[330px] h-[37px] border border-gray-300 rounded-[8px] text-black flex items-center justify-center gap-2 text-[14px] font-medium hover:bg-gray-50 transition-colors">
@@ -64,13 +75,25 @@ export default function SignInPage() {
               <input type="checkbox" className="rounded border-gray-300" />
               Remember me
             </label>
-            <span className="text-[#284297] font-medium cursor-pointer">Forgot password</span>
+            <Link href="/signin/change-password">
+              <span className="text-[#284297] font-medium cursor-pointer">Forgot password</span>
+            </Link>
           </div>
 
           {/* Sign In Button */}
-          <button className="w-[330px] h-[40px] bg-[#284297] text-white rounded-[8px] font-semibold text-[16px] hover:bg-[#1e3276] transition-all">
-            Sign in
-          </button>
+          <button
+  onClick={() => {
+    login({
+      name: 'John DOE',
+      email: 'johndoe@gmail.com',
+      avatar: '/purchase(2).png',
+    });
+    router.push('/dashboard');
+  }}
+  className="w-[330px] h-[40px] bg-[#284297] text-white rounded-[8px] font-semibold text-[16px] hover:bg-[#1e3276] transition-all"
+>
+  Sign in
+</button>
         </div>
       </div>
 
