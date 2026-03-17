@@ -90,10 +90,7 @@ export default function Navbar() {
       className="w-full bg-white border-b border-gray-200"
       style={{ fontFamily: 'Inter, sans-serif' }}
     >
-      <div
-        className="mx-auto flex items-center justify-between"
-        style={{ maxWidth: '1229px', height: '74px', paddingLeft: '25px', paddingRight: '25px' }}
-      >
+      <div className="w-full flex items-center justify-between px-6 h-[74px]">
 
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center gap-3 shrink-0" style={{ textDecoration: 'none' }}>
