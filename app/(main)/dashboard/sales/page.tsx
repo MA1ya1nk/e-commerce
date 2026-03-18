@@ -813,13 +813,15 @@ export default function SalesPage() {
               ))}
             </div>
             {isTableTab && (
-              <div className="flex items-center gap-3 mb-0.5">
-                <div className="flex items-center border border-gray-200 rounded-[8px] px-3 h-[38px] gap-2 bg-white" style={{ width: '260px' }}>
-                  <Search size={14} className="text-gray-400 shrink-0" />
-                  <input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="outline-none text-[13px] w-full text-gray-600 bg-transparent placeholder-gray-300" placeholder="Search..." />
-                </div>
-                <button className="h-[38px] px-6 bg-[#FF8A65] text-white text-[13px] font-medium rounded-[8px] hover:bg-[#f07849] transition-colors whitespace-nowrap">Search</button>
-              </div>
+              <div className="relative">
+                                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                      <input type="text"
+                                        className="w-[320px] h-[38px] pl-10 pr-20 bg-white border border-gray-200 rounded-full text-sm outline-none focus:border-[#FF8A65]"
+                                        placeholder="Search" />
+                                      <button className="absolute right-1 top-1 h-[30px] px-5 bg-[#FF8A65] text-white rounded-full text-[12px] font-medium">
+                                        Search
+                                      </button>
+                                    </div>
             )}
           </div>
 

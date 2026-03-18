@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 /* ─────────────────────────────────────────
-   DATA
+    DATA
 ───────────────────────────────────────── */
 const navLinks = ['For you', 'Local', 'Selling', 'Buying', 'More'];
 
@@ -21,6 +21,14 @@ const filterCategories = [
   'Home Improvement & Tools',
 ];
 
+const allCategories = [
+  'Antiques & Collectibles', 'Appliance', 'Arts & Crafts', 'Auto Parts', 'Baby',
+  'Books, Movies & Music', 'Home Improvement & Tools', 'Electronics', 'Furniture',
+  'Garage Sale', 'Health & Beauty', 'Home Goods & Decor', 'Housing for Sale',
+  'Jewelry & Watches', 'Kidswear & Baby', 'Luggage & Bags', 'Menswear',
+  'Miscellaneous', 'Musical instruments', 'Patio & Garden', 'Pet Supplies', 'Rentals'
+];
+
 const sortOptions = ['Less viewed', 'Most recent', 'Price: low to high', 'Price: high to low'];
 
 const products = Array(42).fill(null).map((_, i) => ({
@@ -31,19 +39,21 @@ const products = Array(42).fill(null).map((_, i) => ({
   location: 'Los Angeles,CA',
 }));
 
-const ITEMS_PER_PAGE = 36; // 6 columns × 6 rows
+const ITEMS_PER_PAGE = 36;
 
 /* ─────────────────────────────────────────
-   PRODUCT CARD
+    PRODUCT CARD
 ───────────────────────────────────────── */
 function ProductCard({ product }) {
   return (
-    <div className="cursor-pointer group">
-      {/* Image */}
+    <div
+      className="cursor-pointer group border border-gray-200 bg-white hover:shadow-sm transition-all"
+      style={{ borderRadius: '10px', padding: '10px' }}
+    >
       <Link href={`/products/${product.id}`}>
         <div
           className="w-full overflow-hidden bg-gray-100 mb-2"
-          style={{ aspectRatio: '1 / 1', borderRadius: '4px' }}
+          style={{ aspectRatio: '1 / 1', borderRadius: '6px' }}
         >
           <img
             src="/purchase(1).png"
@@ -53,65 +63,89 @@ function ProductCard({ product }) {
         </div>
       </Link>
 
-      {/* Info */}
-      <p
-        className="text-[#FF8A65] font-semibold leading-tight mb-0.5 group-hover:underline"
-        style={{ fontFamily: 'Inter, sans-serif', fontSize: '13px' }}
-      >
+      <p className="text-[#FF8A65] font-semibold leading-tight mb-0.5 group-hover:underline" style={{ fontSize: '13px' }}>
         {product.title}
       </p>
-      <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '12px', color: '#111827' }}>
-        {product.price}{' '}
-        <span style={{ color: '#6B7280' }}>({product.condition})</span>
+
+      <p style={{ fontSize: '12px', color: '#111827' }}>
+        {product.price} <span style={{ color: '#6B7280' }}>({product.condition})</span>
       </p>
-      <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '12px', color: '#6B7280' }}>
+
+      <p style={{ fontSize: '12px', color: '#6B7280' }}>
         {product.location}
       </p>
     </div>
   );
 }
-
 /* ─────────────────────────────────────────
-   MAIN PAGE
+    MAIN PAGE
 ───────────────────────────────────────── */
 export default function MarketplacePage() {
-  const [searchQuery, setSearchQuery]         = useState('');
-  const [sortBy, setSortBy]                   = useState('Less viewed');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('Less viewed');
   const [showSortDropdown, setShowSortDropdown] = useState(false);
-  const [activeFilters, setActiveFilters]     = useState([...filterCategories]);
-  const [page, setPage]                       = useState(1);
-  const [activeNav, setActiveNav]             = useState('For you');
+  const [showCategories, setShowCategories] = useState(false); 
+  const [activeFilters, setActiveFilters] = useState([...filterCategories]);
+  const [page, setPage] = useState(1);
+  const [activeNav, setActiveNav] = useState('For you');
 
   const removeFilter = (cat) => setActiveFilters(prev => prev.filter(c => c !== cat));
+  
+  const addFilter = (cat) => {
+    if (!activeFilters.includes(cat)) setActiveFilters(prev => [...prev, cat]);
+    setShowCategories(false);
+  };
 
   const filtered = products.filter(p =>
     searchQuery === '' || p.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
-  const paginated  = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+  // Logic to show products only on page 1, and nothing on next pages
+  const paginated = page === 1 
+    ? filtered.slice(0, ITEMS_PER_PAGE) 
+    : [];
 
   return (
     <div
       className="min-h-screen bg-white"
       style={{ fontFamily: 'Inter, sans-serif' }}
-      onClick={() => setShowSortDropdown(false)}
+      onClick={() => {
+        setShowSortDropdown(false);
+        setShowCategories(false);
+      }}
     >
-
-      {/* ══════════════════════════════════
-          TOP NAV BAR
-      ══════════════════════════════════ */}
       <header
-        className="sticky top-0 z-40 bg-white border-b border-gray-200 flex items-center"
+        className="sticky top-0 z-50 bg-white border-b border-gray-200 flex items-center"
         style={{ height: '57px', width: '100%', paddingLeft: '16px', paddingRight: '16px', gap: '9px' }}
       >
-        {/* Hamburger + Categories */}
-        <button className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 rounded-[6px] text-[13px] text-gray-700 hover:bg-gray-50 transition-colors shrink-0">
-          <Menu size={15} />
-          <span className="font-medium">Categories</span>
-          <ChevronDown size={13} className="text-gray-400" />
-        </button>
+        <div className="relative" onClick={e => e.stopPropagation()}>
+          <button 
+            onClick={() => setShowCategories(!showCategories)}
+            className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 rounded-[6px] text-[13px] text-gray-700 hover:bg-gray-50 transition-colors shrink-0"
+          >
+            <Menu size={15} />
+            <span className="font-medium">Categories</span>
+            <ChevronDown size={13} className="text-gray-400" />
+          </button>
 
-        {/* Nav links */}
+          {showCategories && (
+            <div 
+              className="absolute top-full left-0 mt-1 bg-white border border-gray-200 shadow-xl z-50" 
+              style={{ width: '240px', borderRadius: '4px', padding: '4px 0' }}
+            >
+              {allCategories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => addFilter(cat)}
+                  className="w-full text-left px-4 py-2 text-[13px] text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
         <nav className="flex items-center gap-1">
           {navLinks.map(link => (
             <button
@@ -126,15 +160,10 @@ export default function MarketplacePage() {
           ))}
         </nav>
 
-        {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Search */}
         <div className="flex items-center gap-2">
-          <div
-            className="flex items-center border border-gray-300 rounded-[6px] bg-white"
-            style={{ width: '320px', height: '36px', paddingLeft: '10px', paddingRight: '6px' }}
-          >
+          <div className="flex items-center border border-gray-300 rounded-[6px] bg-white" style={{ width: '320px', height: '36px', paddingLeft: '10px', paddingRight: '6px' }}>
             <Search size={15} className="text-gray-400 shrink-0 mr-2" />
             <input
               value={searchQuery}
@@ -143,157 +172,84 @@ export default function MarketplacePage() {
               placeholder="Search Marketplace"
             />
           </div>
-          <button
-            className="h-[36px] px-5 text-white text-[13px] font-semibold rounded-[6px] hover:opacity-90 transition-opacity whitespace-nowrap"
-            style={{ backgroundColor: '#FF8A65' }}
-          >
+          <button className="h-[36px] px-5 text-white text-[13px] font-semibold rounded-[6px] hover:opacity-90 transition-opacity whitespace-nowrap" style={{ backgroundColor: '#FF8A65' }}>
             Search
           </button>
         </div>
       </header>
 
-      {/* ══════════════════════════════════
-          SORT BY ROW
-      ══════════════════════════════════ */}
-      <div
-        className="flex items-center px-4 border-b border-gray-100 bg-white"
-        style={{ height: '44px', gap: '10px' }}
-      >
+      <div className="flex items-center px-4 border-b border-gray-100 bg-white" style={{ height: '44px', gap: '10px' }}>
         <span className="text-[13px] text-gray-500 shrink-0">Sort by:</span>
-
-        {/* Sort dropdown */}
         <div className="relative" onClick={e => e.stopPropagation()}>
-          <button
-            onClick={() => setShowSortDropdown(o => !o)}
-            className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded-[6px] text-[13px] text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            {sortBy}
-            <ChevronDown size={13} className="text-gray-400" />
+          <button onClick={() => setShowSortDropdown(o => !o)} className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded-[6px] text-[13px] text-gray-700 hover:bg-gray-50">
+            {sortBy} <ChevronDown size={13} className="text-gray-400" />
           </button>
           {showSortDropdown && (
             <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-[8px] shadow-lg z-50 overflow-hidden" style={{ width: '180px' }}>
               {sortOptions.map(opt => (
-                <button
-                  key={opt}
-                  onClick={() => { setSortBy(opt); setShowSortDropdown(false); }}
-                  className={`w-full text-left px-4 py-2.5 text-[13px] transition-colors hover:bg-gray-50
-                    ${sortBy === opt ? 'text-[#FF8A65] font-medium' : 'text-gray-700'}`}
-                >
+                <button key={opt} onClick={() => { setSortBy(opt); setShowSortDropdown(false); }} className={`w-full text-left px-4 py-2.5 text-[13px] hover:bg-gray-50 ${sortBy === opt ? 'text-[#FF8A65] font-medium' : 'text-gray-700'}`}>
                   {opt}
                 </button>
               ))}
             </div>
           )}
         </div>
-
-        {/* Spacer */}
         <div className="flex-1" />
-
-        {/* Location */}
-        <div className="flex items-center gap-1.5 text-[13px] text-gray-600 cursor-pointer hover:text-[#FF8A65] transition-colors">
+        <div className="flex items-center gap-1.5 text-[13px] text-gray-600 cursor-pointer hover:text-[#FF8A65]">
           <MapPin size={14} style={{ color: '#FF8A65' }} />
-          <span>Los Angeles,CA</span>
-          <span className="text-gray-400">- 10 miles</span>
-          <ChevronDown size={13} className="text-gray-400" />
+          <span>Los Angeles,CA</span> <span className="text-gray-400">- 10 miles</span> <ChevronDown size={13} className="text-gray-400" />
         </div>
       </div>
 
-      {/* ══════════════════════════════════
-          FILTER CHIPS ROW
-      ══════════════════════════════════ */}
-      <div
-        className="flex items-center px-4 border-b border-gray-100 bg-white overflow-x-auto"
-        style={{ height: '44px', gap: '8px' }}
-      >
+      <div className="flex items-center px-4 border-b border-gray-100 bg-white overflow-x-auto" style={{ height: '44px', gap: '8px' }}>
         {activeFilters.map(cat => (
-          <div
-            key={cat}
-            className="flex items-center gap-1.5 px-3 py-1 border border-gray-300 rounded-full text-[12px] text-gray-700 whitespace-nowrap hover:border-gray-400 transition-colors shrink-0 cursor-pointer"
-          >
+          <div key={cat} className="flex items-center gap-1.5 px-3 py-1 border border-gray-300 rounded-full text-[12px] text-gray-700 whitespace-nowrap hover:border-gray-400 shrink-0 cursor-pointer">
             <span>{cat}</span>
-            <button
-              onClick={() => removeFilter(cat)}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <X size={11} />
-            </button>
+            <button onClick={() => removeFilter(cat)} className="text-gray-400 hover:text-gray-600"><X size={11} /></button>
           </div>
         ))}
-
         {activeFilters.length > 0 && (
-          <button
-            onClick={() => setActiveFilters([])}
-            className="text-[12px] font-medium whitespace-nowrap shrink-0 hover:underline transition-colors"
-            style={{ color: '#FF8A65' }}
-          >
+          <button onClick={() => setActiveFilters([])} className="text-[12px] font-medium whitespace-nowrap shrink-0 hover:underline" style={{ color: '#FF8A65' }}>
             Clear all categories
           </button>
         )}
       </div>
 
-      {/* ══════════════════════════════════
-          PRODUCT GRID
-      ══════════════════════════════════ */}
       <div className="px-4 pt-4 pb-6">
-        <div
-          className="grid"
-          style={{
-            gridTemplateColumns: 'repeat(6, 1fr)',
-            gap: '12px',
-          }}
-        >
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(6, 1fr)', gap: '12px' }}>
           {paginated.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
-        {/* ── Pagination ── */}
-        <div className="flex items-center justify-center gap-1.5 pt-8">
-          <button
+        {/* ── PAGINATION ADDED HERE ── */}
+        <div className="flex items-center justify-center gap-2 mt-12 pb-10">
+          <button 
             onClick={() => setPage(p => Math.max(1, p - 1))}
-            disabled={page === 1}
-            className="w-8 h-8 flex items-center justify-center rounded-[6px] border border-gray-200 text-gray-400 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <ChevronLeft size={14} />
+            <ChevronLeft size={20} />
           </button>
-
-          {[1, 2, 3].map(n => (
+          
+          {[1, 2, 3, '...', 9].map((item, idx) => (
             <button
-              key={n}
-              onClick={() => setPage(n)}
-              className={`w-8 h-8 flex items-center justify-center rounded-[6px] text-[13px] font-medium transition-colors
-                ${page === n
-                  ? 'text-white'
-                  : 'border border-gray-200 text-gray-500 hover:bg-gray-50'}`}
-              style={page === n ? { backgroundColor: '#FF8A65' } : {}}
+              key={idx}
+              onClick={() => typeof item === 'number' && setPage(item)}
+              className={`w-8 h-8 flex items-center justify-center rounded text-[13px] font-medium transition-colors
+                ${page === item ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-50'}`}
             >
-              {n}
+              {item}
             </button>
           ))}
 
-          <span className="text-gray-400 text-[13px] px-1">...</span>
-
-          <button
-            onClick={() => setPage(9)}
-            className={`w-8 h-8 flex items-center justify-center rounded-[6px] text-[13px] font-medium transition-colors
-              ${page === 9
-                ? 'text-white'
-                : 'border border-gray-200 text-gray-500 hover:bg-gray-50'}`}
-            style={page === 9 ? { backgroundColor: '#FF8A65' } : {}}
+          <button 
+             onClick={() => setPage(p => p + 1)}
+             className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
           >
-            9
-          </button>
-
-          <button
-            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-            disabled={page === totalPages}
-            className="w-8 h-8 flex items-center justify-center rounded-[6px] border border-gray-200 text-gray-400 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-          >
-            <ChevronRight size={14} />
+            <ChevronRight size={20} />
           </button>
         </div>
       </div>
-
     </div>
   );
 }

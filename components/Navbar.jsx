@@ -1,53 +1,3 @@
-// import React from 'react';
-// import { Inter } from 'next/font/google';
-// import Link from 'next/dist/client/link';
-
-// const inter = Inter({ subsets: ['latin'] });
-
-// const Navbar = () => {
-//   return (
-//     <nav className="w-[1229px] h-[40px] mt-[17px] mb-[20px] mx-auto flex items-center justify-between" 
-//          style={{ 
-//            width: '1229px', 
-//            height: '40px', 
-//            top: '17px', 
-//            left: '25px',
-//            opacity: '1' 
-//          }}>
-      
-//       {/* Left Section: Logo */}
-//       <div className="flex items-center gap-[12px]">
-//         <div className="w-[32px] h-[32px] bg-[#D9D9D9] rounded-full" />
-//         <span className="text-[18px] font-semibold leading-none text-[#111827]">
-//           ShopRise
-//         </span>
-//       </div>
-
-//       {/* Middle Section: Navigation Links */}
-//       {/* Gap is set to 321px as per your spec */}
-//       <div className="flex items-center ml-[321px] gap-[32px]">
-//         <a href="/" className="text-[16px] font-medium text-[#FF8A65]">All listing</a>
-//         <a href="/about" className="text-[16px] font-medium text-[#374151] hover:text-black">About us</a>
-//         <a href="/faqs" className="text-[16px] font-medium text-[#374151] hover:text-black">FAQ</a>
-//         <a href="/blog" className="text-[16px] font-medium text-[#374151] hover:text-black">Blog</a>
-//       </div>
-
-//       {/* Right Section: CTA Button */}
-//       <Link href="/signup">
-//       <div className="ml-auto">
-//         <button className="bg-[#284297] text-white px-[24px] py-[10px] rounded-full text-[14px] font-semibold transition-all hover:bg-[#1e3276]">
-//           Sign In
-//         </button>
-//       </div>
-//       </Link>
-//     </nav>
-//   );
-// };
-
-// export default Navbar;
-
-
-
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -63,17 +13,28 @@ const navLinks = [
   { label: 'Blog',        href: '/blog'  },
 ];
 
+// Sample Notification Data
+const notifications = [
+  { id: 1, type: 'Sell', title: 'Your item [Item Name] has been sold to [Buyer\'s Name]. Please proceed with shipping as soon as possible', time: '1 hour ago', status: 'Unread' },
+  { id: 2, type: 'Purchase', title: 'You have purchased the item [Item Name] from [Seller\'s Name]. Thank you for your purchase!', time: '1 hour ago', status: 'Unread' },
+  { id: 3, type: 'Sell', title: 'You have received a payment from [Buyer\'s Name] for the item [Item Name].', time: '1 hour ago', status: 'Read' },
+  { id: 4, type: 'Message', title: 'You have received a message from [User\'s Name]. Check your inbox to respond.', time: '1 hour ago', status: 'Read' },
+];
+
 export default function Navbar() {
   const { user, logout }  = useAuth();
   const pathname          = usePathname();
   const router            = useRouter();
   const [open, setOpen]   = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false); // NEW STATE
   const dropRef           = useRef(null);
+  const bellRef           = useRef(null); // NEW REF
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handler = (e) => {
       if (dropRef.current && !dropRef.current.contains(e.target)) setOpen(false);
+      if (bellRef.current && !bellRef.current.contains(e.target)) setShowNotifications(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -86,131 +47,105 @@ export default function Navbar() {
   };
 
   return (
-    <nav
-      className="w-full bg-white border-b border-gray-200"
-      style={{ fontFamily: 'Inter, sans-serif' }}
-    >
+    <nav className="w-full bg-white border-b border-gray-200 sticky top-0 z-50" style={{ fontFamily: 'Inter, sans-serif' }}>
       <div className="w-full flex items-center justify-between px-6 h-[74px]">
 
-        {/* ── Logo ── */}
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-3 shrink-0" style={{ textDecoration: 'none' }}>
           <div className="w-8 h-8 bg-[#D9D9D9] rounded-full" />
           <span style={{ fontSize: '18px', fontWeight: 600, color: '#111827' }}>ShopRise</span>
         </Link>
 
-        {/* ── Nav Links ── */}
+        {/* Nav Links */}
         <div className="flex items-center gap-8">
           {navLinks.map(({ label, href }) => {
             const isActive = pathname === href;
             return (
-              <Link
-                key={label}
-                href={href}
-                style={{
-                  fontSize: '16px',
-                  fontWeight: 500,
-                  color: isActive ? '#FF8A65' : '#374151',
-                  textDecoration: 'none',
-                }}
-                className="hover:opacity-80 transition-opacity"
-              >
+              <Link key={label} href={href} style={{ fontSize: '16px', fontWeight: 500, color: isActive ? '#FF8A65' : '#374151', textDecoration: 'none' }} className="hover:opacity-80 transition-opacity">
                 {label}
               </Link>
             );
           })}
         </div>
 
-        {/* ── Right Side ── */}
+        {/* Right Side */}
         {!user ? (
-
-          /* ── LOGGED OUT: Sign In button ── */
-          <Link href="/signup" style={{ textDecoration: 'none' }}>
-            <button
-              style={{
-                backgroundColor: '#284297',
-                color: 'white',
-                padding: '10px 24px',
-                borderRadius: '9999px',
-                fontSize: '14px',
-                fontWeight: 600,
-                border: 'none',
-                cursor: 'pointer',
-              }}
-              className="hover:opacity-90 transition-opacity"
-            >
+          <Link href="/signin" style={{ textDecoration: 'none' }}>
+            <button style={{ backgroundColor: '#284297', color: 'white', padding: '10px 24px', borderRadius: '9999px', fontSize: '14px', fontWeight: 600, border: 'none', cursor: 'pointer' }} className="hover:opacity-90 transition-opacity">
               Sign In
             </button>
           </Link>
-
         ) : (
-
-          /* ── LOGGED IN: Mail + Bell + Name + Avatar ── */
           <div className="flex items-center gap-4">
+            <Link href="/dashboard/chat" style={{ color: '#6B7280', display: 'flex' }}><Mail size={20} /></Link>
 
-            {/* Mail */}
-            <Link href="/dashboard/chat" style={{ color: '#6B7280', display: 'flex' }}>
-              <Mail size={20} />
-            </Link>
+           {/* Notification Bell Section */}
+<div ref={bellRef}>
+  <button 
+    onClick={() => setShowNotifications(!showNotifications)}
+    style={{ background: 'none', border: 'none', cursor: 'pointer', color: showNotifications ? '#FF8A65' : '#6B7280', display: 'flex', padding: 0 }}
+  >
+    <Bell size={20} />
+  </button>
 
-            {/* Bell */}
-            <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6B7280', display: 'flex', padding: 0 }}>
-              <Bell size={20} />
-            </button>
+  {showNotifications && (
+    <div 
+      className="fixed top-[74px] right-0 bg-white border-l border-b border-gray-200 shadow-2xl z-50 overflow-hidden h-[calc(100vh-74px)]"
+      style={{ width: '380px' }}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100 bg-white">
+        <div className="flex items-center gap-2">
+          <span className="font-bold text-[18px]">Notifications</span>
+          <span className="bg-[#284297] text-white text-[11px] px-2 py-0.5 rounded-full">6</span>
+        </div>
+        <button className="text-[13px] text-[#FF8A65] font-medium hover:underline">Mark all as unread</button>
+      </div>
 
-            {/* Name + Avatar + Dropdown */}
+      {/* Body - Scrollable area */}
+      <div className="overflow-y-auto h-full pb-20">
+        {notifications.map((n) => (
+          <div key={n.id} className="p-5 border-b border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer relative">
+            <div className="flex justify-between items-start mb-1">
+              <span className="text-[#284297] font-bold text-[14px] uppercase tracking-tight">{n.type}</span>
+              {n.status === 'Unread' && (
+                 <span className="text-[11px] font-semibold text-[#284297] flex items-center gap-1">
+                    <span className="w-2 h-2 bg-[#284297] rounded-full" />
+                    Unread
+                 </span>
+              )}
+            </div>
+            <p className="text-[13px] text-gray-700 leading-relaxed mb-2">
+              {n.title}
+            </p>
+            <span className="text-[12px] text-gray-400">{n.time}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
+
+            {/* Profile Section */}
             <div className="relative" ref={dropRef}>
-              <button
-                onClick={() => setOpen(o => !o)}
-                className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-                style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
-              >
-                <span style={{ fontSize: '14px', fontWeight: 500, color: '#111827' }}>
-                  {user.name}
-                </span>
-                <div
-                  className="overflow-hidden bg-gray-200 rounded-full shrink-0"
-                  style={{ width: '36px', height: '36px' }}
-                >
-                  <img
-                    src={'/purchase(2).png'}
-                    alt="avatar"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
+              <button onClick={() => setOpen(o => !o)} className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+                <span style={{ fontSize: '14px', fontWeight: 500, color: '#111827' }}>{user.name}</span>
+                <div className="overflow-hidden bg-gray-200 rounded-full shrink-0" style={{ width: '36px', height: '36px' }}>
+                  <img src={'/purchase(2).png'} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               </button>
 
-              {/* Dropdown */}
               {open && (
-                <div
-                  className="absolute right-0 top-full mt-2 bg-white border border-gray-200 rounded-[10px] shadow-lg z-50 overflow-hidden"
-                  style={{ width: '180px' }}
-                >
-                  <Link
-                    href="/dashboard"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
-                    style={{ fontSize: '14px', color: '#374151', textDecoration: 'none' }}
-                  >
-                    <LayoutGrid size={15} style={{ color: '#9CA3AF' }} />
-                    Dashboard
+                <div className="absolute right-0 top-full mt-2 bg-white border border-gray-200 rounded-[10px] shadow-lg z-50 overflow-hidden" style={{ width: '180px' }}>
+                  <Link href="/dashboard" onClick={() => setOpen(false)} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors" style={{ fontSize: '14px', color: '#374151', textDecoration: 'none' }}>
+                    <LayoutGrid size={15} style={{ color: '#9CA3AF' }} /> Dashboard
                   </Link>
-                  <Link
-                    href="/dashboard/setting"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
-                    style={{ fontSize: '14px', color: '#374151', textDecoration: 'none' }}
-                  >
-                    <Settings size={15} style={{ color: '#9CA3AF' }} />
-                    Settings
+                  <Link href="/dashboard/setting" onClick={() => setOpen(false)} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors" style={{ fontSize: '14px', color: '#374151', textDecoration: 'none' }}>
+                    <Settings size={15} style={{ color: '#9CA3AF' }} /> Settings
                   </Link>
                   <div style={{ borderTop: '1px solid #F3F4F6' }} />
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors"
-                    style={{ fontSize: '14px', color: '#EF4444', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
-                  >
-                    <LogOut size={15} />
-                    Logout
+                  <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors" style={{ fontSize: '14px', color: '#EF4444', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
+                    <LogOut size={15} /> Logout
                   </button>
                 </div>
               )}

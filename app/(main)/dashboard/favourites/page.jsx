@@ -4,7 +4,7 @@ import React from 'react';
 import NextLink from 'next/link';
 import {
   LayoutGrid, ShoppingBag, BadgeDollarSign, Heart,
-  MessageCircle, Settings, HelpCircle, LogOut, Bell,
+  MessageCircle, Settings, HelpCircle, LogOut, Bell, Search
 } from 'lucide-react';
 
 const navItems = [
@@ -58,7 +58,18 @@ const FavouritesPage = () => {
         </header>
 
         <div className="w-full px-8 pt-6 pb-10">
-          <h1 className="text-[22px] font-medium text-[#1F3A93] mb-6">Favourites</h1>
+          <div className="flex justify-between items-center mb-6">
+                      <h2 className="text-[24px] font-semibold text-[#1F3A93]">favourites</h2>
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                        <input type="text"
+                          className="w-[320px] h-[38px] pl-10 pr-20 bg-white border border-gray-200 rounded-full text-sm outline-none focus:border-[#FF8A65]"
+                          placeholder="Search" />
+                        <button className="absolute right-1 top-1 h-[30px] px-5 bg-[#FF8A65] text-white rounded-full text-[12px] font-medium">
+                          Search
+                        </button>
+                      </div>
+                    </div>
 
           {/* ✅ grid-cols-5 + w-full — no fixed pixel widths */}
           <div className="grid grid-cols-5 gap-[13px]">
