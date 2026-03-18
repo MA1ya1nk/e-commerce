@@ -87,7 +87,7 @@ export default function ListingTab() {
         ✅ FIXED: removed fixed width: '1023px' and width: '500px'
         Grid uses w-full + grid-cols-2 to fill all available space 
       */}
-      <div className="grid grid-cols-2 gap-5 overflow-y-auto" style={{ maxHeight: '632px' }}>
+      <div className="grid grid-cols-2 gap-5 overflow-y-auto w-full" style={{ maxHeight: '632px' }}>
         {listings.map(item => (
           <div
             key={item.id}

@@ -857,10 +857,10 @@ export default function SalesPage() {
                   <Plus size={15} /> Create new listing
                 </button>
               </div>
-              <div className="grid grid-cols-2 overflow-y-auto" style={{ width: '1023px', maxHeight: '632px', gap: '20px' }}>
-                {listings.map(item => (
-                  <div key={item.id} className="flex bg-white border border-gray-200 relative"
-                    style={{ width: '500px', height: '143px', borderRadius: '10px', padding: '10px', gap: '10px' }}>
+              <div className="grid grid-cols-2 overflow-y-auto" style={{ width: '100%', maxHeight: '632px', gap: '20px' }}>
+  {listings.map(item => (
+    <div key={item.id} className="flex bg-white border border-gray-200 relative"
+      style={{ width: '100%', height: '143px', borderRadius: '10px', padding: '10px', gap: '10px' }}>
                     <div className="shrink-0 overflow-hidden bg-gray-100" style={{ width: '120px', height: '120px', borderRadius: '3px' }}>
                       <img src="/purchase(1).png" alt="product" className="w-full h-full object-cover" />
                     </div>
