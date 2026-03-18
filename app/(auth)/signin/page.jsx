@@ -9,14 +9,14 @@ export default function SignInPage() {
 const router = useRouter();
 
   return (
-    <div className="flex w-[1280px] h-[832px] overflow-hidden bg-white">
+    <div className="flex w-full min-h-screen overflow-hidden bg-white">
       
       {/* Left Section: Form (442px) */}
-      <div className="w-[442px] h-[832px] flex flex-col items-center pt-[40px] relative">
+      <div className="w-[442px] min-h-screen flex flex-col items-center pt-[40px] relative shrink-0">
         {/* Logo at top left */}
         <div className="absolute top-[20px] left-[25px] flex items-center gap-2">
-          <img src="/logo-placeholder.png" alt="ShopRise" width="32" height="32" />
-          <span className="text-[18px] font-semibold">ShopRise</span>
+          <div className="w-8 h-8 bg-[#D9D9D9] rounded-full" />
+          <span className="text-[18px] font-semibold text-[#111827]">ShopRise</span>
         </div>
 
         {/* Main Content (330px wide) */}
@@ -97,8 +97,8 @@ const router = useRouter();
         </div>
       </div>
 
-      {/* Right Section: Image (838px) */}
-      <div className="w-[838px] h-[832px]">
+      {/* Right Section: Image — fills remaining space */}
+      <div className="flex-1 min-h-screen">
         <img 
           src="/Rectangle 21.png" 
           alt="Shopping cart on laptop" 
